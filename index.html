@@ -15,9 +15,10 @@
       --gold: #e8c37b;
       --gold-light: #fff3ce;
       --gold-dark: #b89554;
-      --bg-dark: #071318;
-      --bg-card: rgba(10, 20, 26, 0.65);
+      --bg-dark: #050b0f;
+      --bg-card: rgba(10, 20, 26, 0.4);
       --text-main: #e2e8f0;
+      --glow: 0 0 20px rgba(232, 195, 123, 0.3);
     }
 
     * {
@@ -30,16 +31,48 @@
       scroll-behavior: smooth;
     }
 
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold-dark);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--gold);
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       font-weight: 300;
       background-color: var(--bg-dark);
-      background-image: linear-gradient(rgba(7, 19, 24, 0.85), rgba(7, 19, 24, 0.95)), url('image/01.jpeg');
+      background-image: radial-gradient(circle at top right, rgba(232, 195, 123, 0.05), transparent 40%),
+        radial-gradient(circle at bottom left, rgba(232, 195, 123, 0.05), transparent 40%),
+        linear-gradient(rgba(5, 11, 15, 0.9), rgba(5, 11, 15, 0.95)), url('image/01.jpeg');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
       color: var(--text-main);
       overflow-x: hidden;
+    }
+
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold));
+      width: 0%;
+      z-index: 10000;
+      box-shadow: 0 0 10px var(--gold);
+      border-radius: 0 2px 2px 0;
     }
 
     #particle-canvas {
@@ -67,7 +100,7 @@
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: shimmer 3s linear infinite;
+      animation: shimmer 4s linear infinite;
     }
 
     @keyframes shimmer {
@@ -82,8 +115,8 @@
       left: 0;
       width: 100%;
       height: 100vh;
-      background: #071318;
-      background-image: radial-gradient(circle at center, #112d38 0%, #071318 100%);
+      background: #050b0f;
+      background-image: radial-gradient(circle at center, #0d222b 0%, #050b0f 100%);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -94,18 +127,31 @@
     }
 
     .cover-content {
-      padding: 40px;
-      border: 1px solid rgba(232, 195, 123, 0.3);
-      border-radius: 200px 200px 10px 10px;
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 40px rgba(232, 195, 123, 0.05);
-      position: relative;
+      padding: 50px;
+      border: 1px solid rgba(232, 195, 123, 0.2);
+      border-radius: 200px 200px 15px 15px;
+      background: rgba(10, 20, 26, 0.3);
+      backdrop-filter: blur(15px);
+      box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.02), var(--glow);
       margin: 0 20px;
+      transform-style: preserve-3d;
+      animation: floatCover 6s ease-in-out infinite;
+    }
+
+    @keyframes floatCover {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
     }
 
     .cover-title {
-      font-size: 3.2rem;
+      font-size: 3.5rem;
       margin-bottom: 5px;
       line-height: 1.1;
     }
@@ -120,9 +166,9 @@
     .btn-gold {
       background: linear-gradient(135deg, var(--gold-dark), var(--gold-light), var(--gold-dark));
       background-size: 200% 200%;
-      color: #071318;
+      color: #050b0f;
       border: none;
-      padding: 14px 40px;
+      padding: 15px 45px;
       border-radius: 50px;
       font-family: 'Poppins', sans-serif;
       font-weight: 600;
@@ -130,29 +176,54 @@
       letter-spacing: 2px;
       cursor: pointer;
       box-shadow: 0 10px 25px rgba(232, 195, 123, 0.3);
-      transition: all 0.4s ease;
-      animation: gradientShift 4s ease infinite;
-      display: inline-block;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       text-decoration: none;
     }
 
-    @keyframes gradientShift {
+    .btn-gold::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent);
+      transform: skewX(-25deg);
+      animation: shineBtn 4s infinite;
+    }
+
+    @keyframes shineBtn {
       0% {
-        background-position: 0% 50%;
+        left: -100%;
       }
 
-      50% {
-        background-position: 100% 50%;
-      }
-
+      20%,
       100% {
-        background-position: 0% 50%;
+        left: 200%;
       }
     }
 
     .btn-gold:hover {
       transform: translateY(-5px) scale(1.05);
       box-shadow: 0 15px 35px rgba(232, 195, 123, 0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: rgba(232, 195, 123, 0.1);
+      color: var(--gold-light);
     }
 
     main {
@@ -175,7 +246,7 @@
 
     .reveal {
       opacity: 0;
-      transform: translateY(60px) scale(0.95);
+      transform: translateY(80px) scale(0.9);
       transition: all 1.2s cubic-bezier(0.5, 0, 0, 1);
     }
 
@@ -184,38 +255,49 @@
       transform: translateY(0) scale(1);
     }
 
+    /* 3D Glass Card */
     .glass-card {
       background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-top: 1px solid rgba(232, 195, 123, 0.4);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-top: 1px solid rgba(232, 195, 123, 0.5);
       border-bottom: 1px solid rgba(232, 195, 123, 0.1);
-      border-radius: 25px;
+      border-radius: 30px;
       padding: 50px;
       width: 100%;
       max-width: 650px;
       margin: 20px auto;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(232, 195, 123, 0.05);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), var(--glow);
       position: relative;
       overflow: hidden;
+      transform-style: preserve-3d;
+      transform: perspective(1000px);
+      transition: transform 0.1s ease-out;
+      /* For JS Tilt */
     }
 
-    .glass-card::before {
+    .glass-card>* {
+      transform: translateZ(30px);
+      /* Pop out effect for content */
+    }
+
+    .glass-card::after {
       content: '';
       position: absolute;
-      top: -50px;
-      left: -50px;
-      width: 150px;
-      height: 150px;
-      background: radial-gradient(circle, rgba(232, 195, 123, 0.2) 0%, transparent 70%);
-      border-radius: 50%;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(232, 195, 123, 0.08) 0%, transparent 60%);
+      pointer-events: none;
       z-index: -1;
     }
 
     .section-title {
-      font-size: 2rem;
+      font-size: 2.2rem;
       margin-top: 10px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     }
 
     .section-desc {
@@ -229,52 +311,62 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      /* Memungkinkan kotak turun ke bawah jika layar sempit */
       gap: 15px;
       margin: 35px 0;
     }
 
     .cd-box {
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(232, 195, 123, 0.3);
-      border-radius: 15px;
-      padding: 18px 15px;
-      min-width: 85px;
+      background: linear-gradient(145deg, rgba(20, 30, 40, 0.6), rgba(5, 10, 15, 0.8));
+      border: 1px solid rgba(232, 195, 123, 0.2);
+      border-radius: 20px;
+      padding: 20px 15px;
+      min-width: 90px;
       flex: 1 1 auto;
-      max-width: 100px;
-      /* Menjaga ukuran tidak terlalu besar */
-      box-shadow: inset 0 0 15px rgba(232, 195, 123, 0.05);
+      max-width: 110px;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.3);
       position: relative;
-      overflow: hidden;
+    }
+
+    .cd-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 10%;
+      width: 80%;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 50%;
+      filter: blur(2px);
     }
 
     .cd-box span {
       display: block;
       font-family: 'Playfair Display', serif;
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       color: var(--gold-light);
       line-height: 1;
-      text-shadow: 0 0 10px rgba(232, 195, 123, 0.5);
+      text-shadow: 0 0 15px rgba(232, 195, 123, 0.6);
     }
 
     .cd-box small {
       font-family: 'Poppins', sans-serif;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--gold);
-      margin-top: 10px;
+      color: var(--gold-dark);
+      margin-top: 12px;
       display: block;
+      font-weight: 500;
     }
 
     #music-control {
       position: fixed;
       bottom: 30px;
       right: 30px;
-      width: 55px;
-      height: 55px;
-      background: rgba(10, 20, 26, 0.8);
-      border: 2px solid var(--gold);
+      width: 60px;
+      height: 60px;
+      background: rgba(10, 20, 26, 0.6);
+      border: 1px solid rgba(232, 195, 123, 0.5);
       border-radius: 50%;
       display: flex;
       justify-content: center;
@@ -283,16 +375,32 @@
       color: var(--gold);
       cursor: pointer;
       z-index: 1000;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 20px rgba(232, 195, 123, 0.3);
-      animation: spin 4s linear infinite;
+      backdrop-filter: blur(15px);
+      box-shadow: var(--glow);
       display: none;
+      transition: all 0.3s ease;
+    }
+
+    #music-control::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      border-left-color: transparent;
+      border-right-color: transparent;
+      animation: spin 3s linear infinite;
+    }
+
+    #music-control.paused::after {
+      animation-play-state: paused;
+      border-color: transparent;
     }
 
     #music-control.paused {
-      animation-play-state: paused;
-      border-color: #8892b0;
-      color: #8892b0;
+      border-color: #4a5568;
+      color: #4a5568;
       box-shadow: none;
     }
 
@@ -303,19 +411,20 @@
     }
 
     .lantern {
-      font-size: 3rem;
+      font-size: 3.5rem;
       display: inline-block;
-      animation: swing 3s ease-in-out infinite alternate;
+      animation: swing 4s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite alternate;
       transform-origin: top center;
+      filter: drop-shadow(0 0 15px rgba(232, 195, 123, 0.4));
     }
 
     @keyframes swing {
       0% {
-        transform: rotate(-10deg);
+        transform: rotate(-12deg);
       }
 
       100% {
-        transform: rotate(10deg);
+        transform: rotate(12deg);
       }
     }
 
@@ -324,45 +433,44 @@
       height: 1px;
       background: linear-gradient(to right, transparent, var(--gold), transparent);
       margin: 35px 0;
-      opacity: 0.6;
+      opacity: 0.5;
     }
 
     .input-nama {
       width: 100%;
-      padding: 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(232, 195, 123, 0.5);
-      background: rgba(0, 0, 0, 0.5);
+      padding: 18px;
+      border-radius: 15px;
+      border: 1px solid rgba(232, 195, 123, 0.3);
+      background: rgba(0, 0, 0, 0.4);
       color: white;
       font-family: 'Poppins', sans-serif;
       font-size: 1.1rem;
       text-align: center;
       margin-top: 15px;
       transition: all 0.3s ease;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
     }
 
     .input-nama:focus {
       outline: none;
       border-color: var(--gold);
-      box-shadow: 0 0 20px rgba(232, 195, 123, 0.4);
+      box-shadow: 0 0 20px rgba(232, 195, 123, 0.2), inset 0 2px 10px rgba(0, 0, 0, 0.5);
+      transform: translateY(-2px);
     }
 
-    /* =========================================
-       MEDIA QUERIES (MOBILE OPTIMIZATION)
-       ========================================= */
+    /* MEDIA QUERIES */
     @media (max-width: 768px) {
       .cover-title {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
       }
 
       .glass-card {
-        padding: 30px 20px;
+        padding: 40px 20px;
       }
 
       section {
         padding: 60px 15px;
         min-height: auto;
-        /* Mengurangi ruang kosong berlebih di layar HP */
       }
 
       .countdown-wrapper {
@@ -370,44 +478,45 @@
       }
 
       .cd-box {
-        min-width: 70px;
-        padding: 12px 10px;
+        min-width: 75px;
+        padding: 15px 10px;
       }
 
       .cd-box span {
-        font-size: 1.8rem;
+        font-size: 2rem;
       }
 
       #music-control {
         bottom: 20px;
         right: 20px;
-        width: 45px;
-        height: 45px;
+        width: 50px;
+        height: 50px;
         font-size: 1.2rem;
       }
     }
 
     @media (max-width: 480px) {
       .cover-title {
-        font-size: 2rem;
+        font-size: 2.2rem;
       }
 
       .cover-content {
-        padding: 30px 15px;
-        border-radius: 150px 150px 10px 10px;
+        padding: 40px 15px;
+        border-radius: 150px 150px 15px 15px;
       }
 
       .lantern {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
       }
 
       .btn-gold {
-        padding: 12px 25px;
+        padding: 14px 25px;
         font-size: 0.9rem;
+        width: 100%;
       }
 
       .section-title {
-        font-size: 1.6rem;
+        font-size: 1.8rem;
       }
 
       .section-desc {
@@ -415,32 +524,31 @@
       }
 
       h3 {
-        font-size: 1.3rem !important;
+        font-size: 1.4rem !important;
       }
 
       .cd-box {
-        min-width: 60px;
-        padding: 10px 5px;
+        min-width: 65px;
+        padding: 12px 5px;
       }
 
       .cd-box span {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
       }
 
       .cd-box small {
-        font-size: 0.65rem;
+        font-size: 0.7rem;
       }
 
       iframe {
         height: 250px;
-        /* Map lebih proporsional di HP */
       }
     }
   </style>
 </head>
 
 <body>
-
+  <div id="scroll-progress"></div>
   <canvas id="particle-canvas"></canvas>
 
   <div id="cover">
@@ -448,17 +556,24 @@
       <div class="lantern">✨🌙✨</div>
       <h1 class="cover-title shimmer-text">Buka Puasa<br>Bersama</h1>
       <p class="cover-guest" id="guest-name">GETWAL<br>
-        <span style="color: var(--gold); font-weight: 500;">Generation Twelve Al-Hikam</span>
+        <span style="color: var(--gold); font-weight: 500; font-size: 1.1rem;">Generation Twelve Al-Hikam</span>
       </p>
-      <button class="btn-gold" onclick="openInvitation()">BUKA UNDANGAN</button>
+      <button class="btn-gold" onclick="openInvitation()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        BUKA UNDANGAN
+      </button>
     </div>
   </div>
 
   <main id="main-content">
-
     <section id="hero">
-      <div class="glass-card reveal">
-        <div class="lantern" style="font-size: 4rem;">🕌</div>
+      <div class="glass-card reveal tilt-element">
+        <div class="lantern">🕌</div>
         <h2 class="section-title shimmer-text">Assalamu'alaikum Wr. Wb.</h2>
         <p class="section-desc">
           Puji syukur senantiasa kita panjatkan. Dengan penuh kebahagiaan, kami mengundang Anda untuk merajut ukhuwah
@@ -468,8 +583,8 @@
         <hr class="elegant">
 
         <h3>Rabu, 18 Maret 2026</h3>
-        <p style="color: var(--gold-light); margin-top: 5px; font-size: 1.1rem; font-weight: 500;">Pukul 17:30 WIB -
-          Selesai</p>
+        <p style="color: var(--gold-light); margin-top: 5px; font-size: 1.1rem; font-weight: 500; letter-spacing: 1px;">
+          Pukul 17:30 WIB - Selesai</p>
 
         <div class="countdown-wrapper" id="countdown">
           <div class="cd-box"><span id="hari">00</span><small>Hari</small></div>
@@ -477,25 +592,36 @@
           <div class="cd-box"><span id="menit">00</span><small>Menit</small></div>
           <div class="cd-box"><span id="detik">00</span><small>Detik</small></div>
         </div>
+
         <p id="pesan-waktu"
-          style="display:none; color: var(--gold); font-size: 1.3rem; font-family: 'Playfair Display', serif;">Waktu
-          Buka Puasa Telah Tiba!</p>
+          style="display:none; color: var(--gold); font-size: 1.3rem; font-family: 'Playfair Display', serif; margin-bottom: 20px;">
+          Waktu Buka Puasa Telah Tiba!</p>
+
+        <button class="btn-gold btn-outline" onclick="addToCalendar()"
+          style="padding: 10px 25px; font-size: 0.85rem; margin-top: 10px;">
+          📅 SIMPAN KE KALENDER
+        </button>
       </div>
     </section>
 
     <section id="details">
-      <div class="glass-card reveal">
+      <div class="glass-card reveal tilt-element">
         <h2 class="section-title shimmer-text">Rangkaian Acara</h2>
         <hr class="elegant">
 
         <div style="text-align: left; margin: 0 auto; max-width: 450px; line-height: 2.2; font-size: 1.05rem;">
-          <p>👔 <span style="color: var(--gold); font-weight: 500;">DRESS CODE:</span> Arabian Style / Moslem Elegant
-          </p>
-          <p>🎯 <span style="color: var(--gold); font-weight: 500;">AGENDA:</span></p>
-          <ul style="list-style-type: none; padding-left: 30px;">
-            <li>✨ Pembukaan & Doa Bersama</li>
-            <li>✨ Buka Puasa Bersama</li>
-            <li>✨ Games & Ramah Tamah</li>
+          <div
+            style="background: rgba(0,0,0,0.3); padding: 15px 20px; border-radius: 12px; border-left: 4px solid var(--gold); margin-bottom: 20px;">
+            <span style="font-size: 1.5rem; vertical-align: middle;">👔</span>
+            <span style="color: var(--gold); font-weight: 600; margin-left: 10px;">DRESS CODE:</span><br>
+            <span style="color: #fff; margin-left: 42px;">Arabian Style / Moslem Elegant</span>
+          </div>
+
+          <p style="margin-top: 25px;">🎯 <span style="color: var(--gold); font-weight: 600;">AGENDA UTAMA:</span></p>
+          <ul style="list-style-type: none; padding-left: 30px; margin-top: 10px;">
+            <li style="margin-bottom: 10px;">✨ Pembukaan & Doa Bersama</li>
+            <li style="margin-bottom: 10px;">✨ Buka Puasa Bersama</li>
+            <li style="margin-bottom: 10px;">✨ Games & Ramah Tamah</li>
             <li>✨ Pemilihan Best Costume & Doorprize</li>
           </ul>
         </div>
@@ -503,42 +629,54 @@
     </section>
 
     <section id="location">
-      <div class="glass-card reveal">
+      <div class="glass-card reveal tilt-element">
         <h2 class="section-title shimmer-text">Lokasi Acara</h2>
         <p class="section-desc">Jln.Prabu Tadjimalela (sacipa)</p>
 
-        <iframe width="100%" height="320"
-          style="border:0; border-radius: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.6);" loading="lazy" allowfullscreen
-          src="https://maps.google.com/maps?q=Sapphire+City+Park+Sumedang&t=&z=16&ie=UTF8&iwloc=&output=embed">
-        </iframe>
+        <div
+          style="position: relative; padding: 5px; background: linear-gradient(135deg, rgba(232,195,123,0.3), rgba(0,0,0,0)); border-radius: 20px;">
+          <iframe width="100%" height="320"
+            style="border:0; border-radius: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.8);" loading="lazy"
+            allowfullscreen
+            src="https://maps.google.com/maps?q=Sapphire+City+Park+Sumedang&t=&z=16&ie=UTF8&iwloc=&output=embed"></iframe>
+        </div>
 
         <a href="https://maps.google.com/?cid=15102397927715223243&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ"
-          target="_blank" class="btn-gold" style="margin-top: 30px; padding: 14px 35px; width: auto;">
-          📍 Buka maps
+          target="_blank" class="btn-gold" style="margin-top: 30px;">
+          📍 BUKA DI GOOGLE MAPS
         </a>
       </div>
     </section>
 
     <section id="rsvp">
-      <div class="glass-card reveal">
-        <h2 class="section-title shimmer-text">Kehadiran</h2>
-        <p class="section-desc" style="margin-bottom: 20px;">Kehadiran Anda adalah kehormatan bagi kami.
-          Mohon isi nama untuk konfirmasi.</p>
+      <div class="glass-card reveal tilt-element">
+        <h2 class="section-title shimmer-text">Konfirmasi Kehadiran</h2>
+        <p class="section-desc" style="margin-bottom: 25px;">Kehadiran Anda adalah kehormatan bagi kami. Mohon isi nama
+          untuk konfirmasi reservasi tempat.</p>
 
-        <input type="text" id="inputNama" class="input-nama" placeholder="Ketik Nama Anda di Sini...">
+        <input type="text" id="inputNama" class="input-nama" placeholder="Ketik Nama Lengkap Anda...">
 
         <button class="btn-gold"
-          style="background: linear-gradient(45deg, #25D366, #128C7E); color: white; width: 100%; margin-top: 20px;"
+          style="background: linear-gradient(45deg, #25D366, #128C7E); color: white; width: 100%; margin-top: 25px; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);"
           onclick="kirimWA()">
-          <span style="font-size: 1.3rem; vertical-align: middle; margin-right: 8px;">💬</span> WHATSAPP
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+            <path
+              d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+            </path>
+          </svg>
+          KIRIM VIA WHATSAPP
         </button>
       </div>
     </section>
 
-    <footer style="padding: 50px 20px; text-align: center; font-size: 1rem; color: #8892b0;">
+    <footer
+      style="padding: 60px 20px; text-align: center; font-size: 1rem; color: #8892b0; position: relative; z-index: 10;">
+      <div class="lantern" style="font-size: 2rem; margin-bottom: 15px; animation-duration: 5s;">✨</div>
       <p>Wassalamu'alaikum Wr. Wb.</p>
-      <p style="margin-top: 15px; font-size: 1.5rem; color: var(--gold); font-family: 'Playfair Display', serif;"
+      <p style="margin-top: 15px; font-size: 1.8rem; color: var(--gold); font-family: 'Playfair Display', serif;"
         class="shimmer-text">Erwin Esa Septian</p>
+      <p style="font-size: 0.8rem; margin-top: 30px; opacity: 0.5;">© 2026 GETWAL. All Rights Reserved.</p>
     </footer>
 
   </main>
@@ -550,21 +688,36 @@
   </audio>
 
   <script>
-    // [Script JS Anda tetap tidak berubah karena sudah berjalan baik]
+    // --- SCROLL PROGRESS BAR ---
+    window.addEventListener('scroll', () => {
+      let scrollDistance = -document.body.getBoundingClientRect().top;
+      let progressPercentage = (scrollDistance / (document.body.getBoundingClientRect().height - document.documentElement.clientHeight)) * 100;
+      let val = Math.floor(progressPercentage);
+      document.getElementById('scroll-progress').style.width = val + "%";
+    });
+
+    // --- CANGGIH: PARTIKEL BERJARING (CONSTELLATION) ---
     const canvas = document.getElementById("particle-canvas");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     let particlesArray = [];
+    let mouse = {x: null, y: null, radius: 150};
+
+    window.addEventListener('mousemove', function (event) {
+      mouse.x = event.x;
+      mouse.y = event.y;
+    });
+
     class Particle {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2.5 + 0.5;
+        this.size = Math.random() * 2 + 1;
         this.speedX = Math.random() * 1 - 0.5;
         this.speedY = Math.random() * 1 - 0.5;
-        this.opacity = Math.random() * 0.5 + 0.2;
+        this.opacity = Math.random() * 0.5 + 0.1;
       }
       update() {
         this.x += this.speedX;
@@ -582,7 +735,8 @@
 
     function initParticles() {
       particlesArray = [];
-      let numParticles = window.innerWidth < 768 ? 40 : 100; for (let i = 0; i < numParticles; i++) {
+      let numParticles = window.innerWidth < 768 ? 50 : 120;
+      for (let i = 0; i < numParticles; i++) {
         particlesArray.push(new Particle());
       }
     }
@@ -592,6 +746,22 @@
       for (let i = 0; i < particlesArray.length; i++) {
         particlesArray[i].update();
         particlesArray[i].draw();
+
+        // Menghubungkan garis antar partikel (Efek Jaringan)
+        for (let j = i; j < particlesArray.length; j++) {
+          let dx = particlesArray[i].x - particlesArray[j].x;
+          let dy = particlesArray[i].y - particlesArray[j].y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 100) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(232, 195, 123, ${0.15 - distance / 1000})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+            ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+            ctx.stroke();
+          }
+        }
       }
       requestAnimationFrame(animateParticles);
     }
@@ -604,11 +774,34 @@
       initParticles();
     });
 
+    // --- 3D TILT EFFECT UNTUK KARTU KACA ---
+    const tiltElements = document.querySelectorAll('.tilt-element');
+    tiltElements.forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        if (window.innerWidth <= 768) return; // Matikan di mobile agar tidak berat
+        let rect = el.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+        let xMid = rect.width / 2;
+        let yMid = rect.height / 2;
+        let xTilt = (y - yMid) / 15; // Kecepatan rotasi sumbu X
+        let yTilt = (xMid - x) / 15; // Kecepatan rotasi sumbu Y
 
+        el.style.transform = `perspective(1000px) rotateX(${xTilt}deg) rotateY(${yTilt}deg) scale3d(1.02, 1.02, 1.02)`;
+        el.style.transition = 'none';
+      });
+
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        el.style.transition = 'transform 0.5s ease-out';
+      });
+    });
+
+    // --- LOGIKA URL TAMU ---
     const urlParams = new URLSearchParams(window.location.search);
     const tamu = urlParams.get('to');
     if (tamu) {
-      document.getElementById('guest-name').innerHTML = `KEPADA YTH.<br><span style="color: var(--gold); font-size: 1.6rem; font-family: 'Playfair Display', serif;">${tamu}</span>`;
+      document.getElementById('guest-name').innerHTML = `KEPADA YTH.<br><span style="color: var(--gold); font-size: 1.8rem; font-family: 'Playfair Display', serif; display:block; margin-top:5px; text-shadow: 0 0 10px rgba(232,195,123,0.5);">${tamu}</span>`;
       document.getElementById('inputNama').value = tamu;
     }
 
@@ -631,9 +824,8 @@
 
         audio.play().catch(() => {
           musicBtn.classList.add('paused');
-          console.log("Autoplay dicegah.");
         });
-      }, 1200);
+      }, 1000);
     }
 
     function toggleMusic() {
@@ -648,6 +840,7 @@
       }
     }
 
+    // --- ANIMASI MUNCUL SAAT SCROLL ---
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -661,6 +854,7 @@
       observer.observe(reveal);
     });
 
+    // --- COUNTDOWN ---
     const targetDate = new Date("Mar 18, 2026 17:30:00").getTime();
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -679,21 +873,25 @@
       document.getElementById("detik").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
     }, 1000);
 
+    // --- ADD TO CALENDAR ---
+    function addToCalendar() {
+      // Format Waktu UTC untuk 18 Maret 2026, 17:30 WIB (UTC+7) -> 10:30 UTC
+      const url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Buka+Puasa+Bersama+GETWAL&dates=20260318T103000Z/20260318T130000Z&details=Buka+Puasa+Bersama+Generation+Twelve+Al-Hikam.+Mari+merajut+ukhuwah!&location=Jln.Prabu+Tadjimalela+(Sacipa)";
+      window.open(url, '_blank');
+    }
+
+    // --- WHATSAPP ---
     function kirimWA() {
       let namaTamu = document.getElementById("inputNama").value;
-
       if (namaTamu.trim() === "") {
         alert("Mohon isi nama Anda terlebih dahulu sebelum mengonfirmasi kehadiran.");
         return;
       }
-
       let pesan = `Assalamu'alaikum, saya *${namaTamu}* mengkonfirmasi akan HADIR di acara Buka Puasa Bersama GETWAL.`;
-
       let nomor = "6288210222618";
       window.open("https://wa.me/" + nomor + "?text=" + encodeURIComponent(pesan));
     }
   </script>
-
 </body>
 
 </html>
