@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Undangan Bukber Ramadhan</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(#0f2027, #203a43, #2c5364);
+      color: white;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    /* background islami */
+
+    .bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("/home/padli/esafolder/image/01.jpeg");
+      background-size: cover;
+      background-position: center;
+      opacity: 0.25;
+      z-index: -1;
+    }
+
+    /* masjid */
+
+    .masjid {
+      font-size: 120px;
+      margin-top: 40px;
+      animation: masjidAnim 3s infinite alternate;
+    }
+
+    @keyframes masjidAnim {
+      from {
+        transform: translateY(0)
+      }
+
+      to {
+        transform: translateY(10px)
+      }
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.5);
+      margin: 40px auto;
+      width: 420px;
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      color: #ffd369;
+    }
+
+    .detail {
+      text-align: left;
+      margin-top: 15px;
+      line-height: 1.8;
+    }
+
+    .acara {
+      text-align: left;
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .countdown {
+      font-size: 22px;
+      margin-top: 15px;
+      color: #ffd369;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      background: #25D366;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1ebc59;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg"></div>
+
+  <div class="masjid">🕌</div>
+
+  <div class="container">
+
+    <h1>Undangan Bukber Ramadhan</h1>
+
+    <h2 id="namaTamu"></h2>
+
+    <p>Assalamu'alaikum Wr. Wb.</p>
+
+    <p>
+      Dengan penuh kebahagiaan kami mengundang Anda untuk menghadiri acara
+      <b>Buka Puasa Bersama</b>.
+    </p>
+
+    <div class="detail">
+
+      📅 Hari : Rabu
+      <br>📆 Tanggal : 18 Maret 2026
+      <br>🕔 Waktu : 17.30 WIB
+      <br>📍 Tempat : (SACIPA)
+
+    </div>
+
+    <div class="countdown">
+      ⏳ Countdown Buka Puasa:
+      <div id="timer"></div>
+    </div>
+
+    <div class="acara">
+
+      <b>📋 Rangkaian Acara</b>
+
+      <br>🕌 Pembukaan
+      <br>🍽️ Buka Puasa Bersama
+      <br>🎮 Games
+      <br>👗 Best Costume
+      <br>🎁 Door Prizes
+      <br>📸 Foto Bersama
+
+    </div>
+
+    <button onclick="kirimWA()">RSVP WhatsApp</button>
+
+    <p style="margin-top:20px">
+      Wassalamu'alaikum Wr. Wb.
+    </p>
+
+  </div>
+
+  <!-- musik ramadhan -->
+
+  <audio autoplay loop>
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_8c0dfe6f25.mp3" type="audio/mp3">
+  </audio>
+
+  <script>
+
+    /* ambil nama tamu dari link */
+
+    const params = new URLSearchParams(window.location.search);
+
+    const nama = params.get("to");
+
+    if (nama) {
+      document.getElementById("namaTamu").innerHTML = "Kepada: " + nama;
+    }
+
+    /* countdown buka puasa */
+
+    let buka = new Date("Mar 18, 2026 17:30:00").getTime();
+
+    let x = setInterval(function () {
+
+      let now = new Date().getTime();
+
+      let distance = buka - now;
+
+      let jam = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      let menit = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      let detik = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("timer").innerHTML =
+        jam + " Jam " + menit + " Menit " + detik + " Detik";
+
+    }, 1000);
+
+    /* whatsapp */
+
+    function kirimWA() {
+
+      let pesan = "Assalamu'alaikum, saya mengkonfirmasi hadir di acara Bukber.";
+
+      let nomor = "+6288210222618";
+
+      window.open("https://wa.me/" + nomor + "?text=" + encodeURIComponent(pesan));
+
+    }
+
+  </script>
+
+</body>
+
+</html>
